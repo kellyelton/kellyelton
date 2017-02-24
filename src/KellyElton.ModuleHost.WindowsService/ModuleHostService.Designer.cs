@@ -27,14 +27,17 @@
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
             this.LogComponent = new KellyElton.ModuleHost.WindowsService.Components.EventLogLogger(this.components);
-            //
+            ((System.ComponentModel.ISupportInitialize)(this.LogComponent)).BeginInit();
+            // 
             // LogComponent
-            //
-            this.LogComponent.Source = "";
-            //
-            // Service
-            //
+            // 
+            this.LogComponent.Log = "KellyElton Module Host";
+            this.LogComponent.Source = "ModuleHostService";
+            // 
+            // ModuleHostService
+            // 
             this.ServiceName = "KellyElton ModuleHost";
+            ((System.ComponentModel.ISupportInitialize)(this.LogComponent)).EndInit();
 
         }
 

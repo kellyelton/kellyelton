@@ -1,4 +1,6 @@
-﻿using System.ServiceProcess;
+﻿using System;
+using System.Diagnostics;
+using System.ServiceProcess;
 
 namespace KellyElton.ModuleHost.WindowsService
 {
@@ -13,7 +15,17 @@ namespace KellyElton.ModuleHost.WindowsService
             {
                 new ModuleHostService()
             };
-            ServiceBase.Run( ServicesToRun );
+            if( Debugger.IsAttached ) {
+                foreach(IStartable sb in ServicesToRun ) {
+                    sb.Start();
+                }
+                Console.ReadKey();
+                foreach(IStartable sb in ServicesToRun ) {
+                    sb.Stop();
+                }
+            } else {
+                ServiceBase.Run( ServicesToRun );
+            }
         }
     }
 }
