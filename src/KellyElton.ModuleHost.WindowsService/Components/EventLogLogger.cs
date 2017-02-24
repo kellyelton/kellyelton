@@ -62,7 +62,7 @@ namespace KellyElton.ModuleHost.WindowsService.Components
         private static Version ApplicationVersion = typeof( Program ).Assembly.GetName().Version;
         private static string IdentifierFormat = $"{ApplicationName}.{{0}} v{ApplicationVersion}";
 
-        public void Event( string message = null, params string[] tags )                        => WriteLog( "EVENT", ErrorType.None, message, tags );
+        public void Event( string message = null, params string[] tags )                        => WriteLog( "EVENT", ErrorType.None, message, tags, null );
 
         public void Fatal( string message, Exception exception = null, params string[] tags )   => LogException( message, ErrorType.Fatal, exception, tags );
 
@@ -82,22 +82,23 @@ namespace KellyElton.ModuleHost.WindowsService.Components
                     Event( message, tags );
                     break;
                 case ErrorType.Warning:
-                    WriteLog( "WARN ", errorType, message, tags );
+                    WriteLog( "WARN ", errorType, message, tags, exception );
                     break;
                 case ErrorType.Unexpected:
-                    WriteLog( "ERROR", errorType, message, tags );
+                    WriteLog( "ERROR", errorType, message, tags, exception );
                     break;
                 case ErrorType.Fatal:
-                    WriteLog( "FATAL", errorType, message, tags );
+                    WriteLog( "FATAL", errorType, message, tags, exception );
                     break;
             }
         }
 
-        private void WriteLog( string logType, ErrorType errorType, string message, string[] tags ) {
+        private void WriteLog( string logType, ErrorType errorType, string message, string[] tags, Exception exception ) {
             try {
-                var completeMessage = string.Join( Seperator, CreateLogSections( logType, Module, message, tags ) );
+                var completeMessage = string.Join( Seperator, CreateLogSections( logType, Module, message, tags, exception ) );
 
                 WriteEntry( completeMessage, Convert( errorType ), 0, 0 );
+                Console.WriteLine( completeMessage );
             } catch( Exception ex ) {
                 // TODO: something better than this.
                 if( Debugger.IsAttached )
@@ -105,7 +106,7 @@ namespace KellyElton.ModuleHost.WindowsService.Components
             }
         }
 
-        private static IEnumerable<string> CreateLogSections( string logType, string moduleName, string message, string[] tags ) {
+        private static IEnumerable<string> CreateLogSections( string logType, string moduleName, string message, string[] tags, Exception exception ) {
             // Create log type
             yield return logType;
 
@@ -119,6 +120,11 @@ namespace KellyElton.ModuleHost.WindowsService.Components
 
             if( (tags?.Length ?? 0) > 0 ) {
                 yield return Seperator + string.Join( " ", tags );
+            }
+
+            if(exception != null ) {
+                yield return Environment.NewLine;
+                yield return exception.ToString();
             }
         }
 

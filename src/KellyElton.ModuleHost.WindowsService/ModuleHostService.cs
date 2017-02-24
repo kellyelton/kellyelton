@@ -1,7 +1,9 @@
 ﻿using KellyElton.Logging;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.ServiceProcess;
-using System;
+using System.Timers;
 
 namespace KellyElton.ModuleHost.WindowsService
 {
@@ -10,26 +12,40 @@ namespace KellyElton.ModuleHost.WindowsService
         private ILog Log => LogComponent;
 
         public ModuleHostService() {
-            InitializeComponent();
-            foreach( var component in this.components.Components.OfType<ILoadable>() ) {
-                component.Load();
+            try {
+                InitializeComponent();
+                foreach( var component in this.components.Components.OfType<ILoadable>() ) {
+                    component.Load();
+                }
+            } catch {
+                Dispose();
+                throw;
             }
         }
 
         protected override void OnStart( string[] args ) {
-            Log.Event( nameof( OnStart ) );
+            try {
+                Log.Event( nameof( OnStart ) );
+                DownloadFolderClearer.Start();
+            } catch (Exception ex ) {
+                Log.Fatal( ex );
+                Dispose();
+                throw;
+            }
         }
 
         protected override void OnStop() {
-            Log.Event( nameof( OnStop ) );
+            try {
+                Log.Event( nameof( OnStop ) );
+                DownloadFolderClearer.Stop();
+            } catch (Exception ex ) {
+                Log.Fatal( ex );
+                Dispose();
+                throw;
+            }
         }
 
-        public void Start() {
-            OnStart( null );
-        }
-        public new void Stop() {
-            base.Stop();
-        }
+        public void Start() => OnStart( null );
     }
 
     public interface IStartable

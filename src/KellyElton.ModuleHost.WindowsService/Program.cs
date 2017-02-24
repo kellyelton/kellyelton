@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.ServiceProcess;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace KellyElton.ModuleHost.WindowsService
 {
@@ -19,10 +21,13 @@ namespace KellyElton.ModuleHost.WindowsService
                 foreach(IStartable sb in ServicesToRun ) {
                     sb.Start();
                 }
-                Console.ReadKey();
+                while( !Console.KeyAvailable ) {
+                    Application.DoEvents();
+                }
                 foreach(IStartable sb in ServicesToRun ) {
                     sb.Stop();
                 }
+                Application.ExitThread();
             } else {
                 ServiceBase.Run( ServicesToRun );
             }

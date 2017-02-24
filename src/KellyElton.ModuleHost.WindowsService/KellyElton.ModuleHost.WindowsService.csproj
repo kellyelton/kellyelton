@@ -50,6 +50,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\PeriodicFolderWiper.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\PeriodicFolderWiper.Designer.cs">
+      <DependentUpon>PeriodicFolderWiper.cs</DependentUpon>
+    </Compile>
     <Compile Include="Components\EventLogLogger.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -76,6 +82,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Components\PeriodicFolderWiper.resx">
+      <DependentUpon>PeriodicFolderWiper.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Components\EventLogLogger.resx">
       <DependentUpon>EventLogLogger.cs</DependentUpon>
     </EmbeddedResource>
