@@ -37,8 +37,9 @@
             // 
             // DownloadFolderClearer
             // 
+            this.DownloadFolderClearer.Enabled = false;
             this.DownloadFolderClearer.FolderPath = "%HOMEPATH%\\Downloads";
-            this.DownloadFolderClearer.Interval = 60000;
+            this.DownloadFolderClearer.Interval = 60000D;
             // 
             // ModuleHostService
             // 

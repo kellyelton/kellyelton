@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 
 namespace KellyElton.ModuleHost.WindowsService.Components
 {
-    public partial class PeriodicFolderWiper : System.Windows.Forms.Timer
+    public partial class PeriodicFolderWiper : Timer
     {
         public string FolderPath { get; set; }
         private ILog Log => LogComponent;
