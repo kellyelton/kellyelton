@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("KellyElton")]
 [assembly: AssemblyDescription("Application Framework")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Kelly Elton")]
 [assembly: AssemblyProduct("KellyElton")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
