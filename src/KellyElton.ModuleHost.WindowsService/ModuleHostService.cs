@@ -1,9 +1,6 @@
-﻿using KellyElton.Logging;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.ServiceProcess;
-using System.Timers;
 
 namespace KellyElton.ModuleHost.WindowsService
 {
@@ -28,7 +25,8 @@ namespace KellyElton.ModuleHost.WindowsService
                 Log.Event( nameof( OnStart ) );
                 DownloadFolderClearer.Start();
             } catch (Exception ex ) {
-                Log.Fatal( ex );
+                Log.Error( ex );
+                Signal.Exception(ex, Severity.Critical);
                 Dispose();
                 throw;
             }
@@ -39,7 +37,8 @@ namespace KellyElton.ModuleHost.WindowsService
                 Log.Event( nameof( OnStop ) );
                 DownloadFolderClearer.Stop();
             } catch (Exception ex ) {
-                Log.Fatal( ex );
+                Log.Error( ex );
+                Signal.Exception(ex, Severity.Critical);
                 Dispose();
                 throw;
             }

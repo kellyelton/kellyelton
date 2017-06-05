@@ -2,10 +2,10 @@
 
 namespace KellyElton
 {
-    public interface ILogger
+    public interface ILog
     {
         /// <summary>
-        /// The module this <see cref="ILogger"/> is logging.
+        /// The module this <see cref="ILog"/> is logging.
         /// </summary>
         string Module { get; }
 

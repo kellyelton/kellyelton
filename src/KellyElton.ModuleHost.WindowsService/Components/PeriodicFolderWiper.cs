@@ -1,5 +1,4 @@
-﻿using KellyElton.Logging;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.IO;
 using System.Security.Cryptography;

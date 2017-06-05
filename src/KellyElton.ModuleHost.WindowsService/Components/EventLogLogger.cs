@@ -1,5 +1,4 @@
-﻿using KellyElton.Logging;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System;
 using System.Diagnostics;
 using System.Collections.Generic;
@@ -21,7 +20,7 @@ namespace KellyElton.ModuleHost.WindowsService.Components
 
         #endregion LoadableComponent
 
-        #region ILog
+        #region ILogger
 
         [Browsable( false )]
         public string Module => base.Source;
@@ -45,64 +44,43 @@ namespace KellyElton.ModuleHost.WindowsService.Components
             }
         }
 
-        internal EventLogEntryType Convert( ErrorType errorType ) {
-            EventLogEntryType logType =
-                errorType == ErrorType.Fatal || errorType == ErrorType.Unexpected
-                    ? EventLogEntryType.Error
-                    : errorType == ErrorType.Warning
-                        ? EventLogEntryType.Warning
-                        : EventLogEntryType.Information
-            ;
-
-            return logType;
-        }
-
         private const string Seperator = ">";
         private static string ApplicationName = typeof( Program ).Assembly.GetName().Name;
         private static Version ApplicationVersion = typeof( Program ).Assembly.GetName().Version;
         private static string IdentifierFormat = $"{ApplicationName}.{{0}} v{ApplicationVersion}";
 
-        public void Event( string message = null, params string[] tags )                        => WriteLog( "EVENT", ErrorType.None, message, tags, null );
 
-        public void Fatal( string message, Exception exception = null, params string[] tags )   => LogException( message, ErrorType.Fatal, exception, tags );
+        public void Error( string message, Exception exception = null, params string[] tags )   => ((ILog)this).Log(nameof(Error), Module, message, exception, tags);
 
-        public void Fatal( Exception exception, string message = null, params string[] tags )   => LogException( message, ErrorType.Fatal, exception, tags );
+        public void Error( Exception exception, string message = null, params string[] tags )   => ((ILog)this).Log(nameof(Error), Module, message, exception, tags);
 
-        public void Error( string message, Exception exception = null, params string[] tags )   => LogException( message, ErrorType.Fatal, exception, tags );
+        public void Warning( string message, Exception exception = null, params string[] tags ) => ((ILog)this).Log(nameof(Warning), Module, message, exception, tags);
 
-        public void Error( Exception exception, string message = null, params string[] tags )   => LogException( message, ErrorType.Fatal, exception, tags );
+        public void Warning( Exception exception, string message = null, params string[] tags ) => ((ILog)this).Log(nameof(Warning), Module, message, exception, tags);
 
-        public void Warning( string message, Exception exception = null, params string[] tags ) => LogException( message, ErrorType.Fatal, exception, tags );
+        public void Event(string name, string message = null, params string[] tags)             => ((ILog)this).Log(name, Module, message, null, tags);
 
-        public void Warning( Exception exception, string message = null, params string[] tags ) => LogException( message, ErrorType.Fatal, exception, tags );
-
-        private void LogException( string message, ErrorType errorType, Exception exception = null, params string[] tags ) {
-            switch( errorType ) {
-                case ErrorType.None:
-                    Event( message, tags );
-                    break;
-                case ErrorType.Warning:
-                    WriteLog( "WARN ", errorType, message, tags, exception );
-                    break;
-                case ErrorType.Unexpected:
-                    WriteLog( "ERROR", errorType, message, tags, exception );
-                    break;
-                case ErrorType.Fatal:
-                    WriteLog( "FATAL", errorType, message, tags, exception );
-                    break;
-            }
-        }
-
-        private void WriteLog( string logType, ErrorType errorType, string message, string[] tags, Exception exception ) {
+        void ILog.Log(string logLevel, string module, string message, Exception exception, params string[] tags) {
             try {
-                var completeMessage = string.Join( Seperator, CreateLogSections( logType, Module, message, tags, exception ) );
+                var completeMessage = string.Join( Seperator, CreateLogSections(logLevel, Module, message, tags, exception ) );
 
-                WriteEntry( completeMessage, Convert( errorType ), 0, 0 );
+                WriteEntry( completeMessage, Convert(logLevel), 0, 0 );
                 Console.WriteLine( completeMessage );
             } catch( Exception ex ) {
                 // TODO: something better than this.
                 if( Debugger.IsAttached )
                     System.Diagnostics.Debugger.Break();
+            }
+        }
+
+        internal EventLogEntryType Convert( string logLevel ) {
+            switch (logLevel) {
+                case nameof(ILog.Error):
+                    return EventLogEntryType.Error;
+                case nameof(ILog.Warning):
+                    return EventLogEntryType.Warning;
+                default:
+                    return EventLogEntryType.Information;
             }
         }
 
@@ -128,6 +106,6 @@ namespace KellyElton.ModuleHost.WindowsService.Components
             }
         }
 
-        #endregion ILog
+        #endregion ILogger
     }
 }

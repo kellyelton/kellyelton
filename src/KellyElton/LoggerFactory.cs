@@ -4,16 +4,16 @@ namespace KellyElton
 {
     public static class LoggerFactory
     {
-        public static Func<Context, ILogger> DefaultMethod { get; set; }
+        public static Func<Context, ILog> DefaultMethod { get; set; }
 
-        public static ILogger Create(string name) {
+        public static ILog Create(string name) {
             var context = new Context {
                 Name = name
             };
             return DefaultMethod?.Invoke(context) ?? new NullLogger(context);
         }
 
-        public static ILogger Create(Type type) => Create(type.Name);
+        public static ILog Create(Type type) => Create(type.Name);
 
         public class Context
         {

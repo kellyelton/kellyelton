@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace KellyElton
 {
-    public class NullLogger : ILogger
+    public class NullLogger : ILog
     {
 #if (DEBUG)
         internal static System.Collections.Concurrent.ConcurrentQueue<string> LogMessages { get; set; } = new System.Collections.Concurrent.ConcurrentQueue<string>();
