@@ -2,7 +2,6 @@
 
 namespace KellyElton
 {
-
     public static class LoggerFactory
     {
         public static Func<Context, ILogger> DefaultMethod { get; set; }
