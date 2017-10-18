@@ -1,33 +1,55 @@
-﻿using KellyElton.Logging;
-using System.Diagnostics;
+﻿using System;
 using System.Linq;
 using System.ServiceProcess;
 
 namespace KellyElton.ModuleHost.WindowsService
 {
-    public partial class ModuleHostService : ServiceBase
+    public partial class ModuleHostService : ServiceBase, IStartable
     {
         private ILog Log => LogComponent;
 
         public ModuleHostService() {
-            InitializeComponent();
-            ConfigureLogger();
-            foreach(var component in this.components.Components.OfType<ILoadable>() ) {
-                component.Load();
+            try {
+                InitializeComponent();
+                foreach( var component in this.components.Components.OfType<ILoadable>() ) {
+                    component.Load();
+                }
+            } catch {
+                Dispose();
+                throw;
             }
         }
 
-        private void ConfigureLogger() {
-            LogComponent.Source = "ModuleHostService";
-            ((EventLog)LogComponent).Log = "KellyElton Module Host";
-        }
-
         protected override void OnStart( string[] args ) {
-            Log.Trace();
+            try {
+                Log.Event( nameof( OnStart ) );
+                DownloadFolderClearer.Start();
+            } catch (Exception ex ) {
+                Log.Error( ex );
+                Signal.Exception(ex, Severity.Critical);
+                Dispose();
+                throw;
+            }
         }
 
         protected override void OnStop() {
-            Log.Trace();
+            try {
+                Log.Event( nameof( OnStop ) );
+                DownloadFolderClearer.Stop();
+            } catch (Exception ex ) {
+                Log.Error( ex );
+                Signal.Exception(ex, Severity.Critical);
+                Dispose();
+                throw;
+            }
         }
+
+        public void Start() => OnStart( null );
+    }
+
+    public interface IStartable
+    {
+        void Start();
+        void Stop();
     }
 }

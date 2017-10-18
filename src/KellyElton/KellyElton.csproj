@@ -35,9 +35,13 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
+    <None Include="KellyElton.nuspec" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Logging\ILog.cs" />
+    <Compile Include="ISignaler.cs" />
+    <Compile Include="ILog.cs" />
+    <Compile Include="LoggerFactory.cs" />
+    <Compile Include="NullLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

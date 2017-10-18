@@ -1,0 +1,18 @@
+﻿<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>http://www.kellyelton.com</licenseUrl>
+    <projectUrl>http://www.kellyelton.com</projectUrl>
+    <iconUrl>http://www.kellyelton.com/icon.ico</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright Kelly Elton 2017</copyright>
+    <tags>Kelly Elton Application Framework</tags>
+  </metadata>
+</package>

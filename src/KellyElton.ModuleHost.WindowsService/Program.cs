@@ -1,19 +1,36 @@
-﻿using System.ServiceProcess;
+﻿using System;
+using System.Diagnostics;
+using System.ServiceProcess;
+using System.Threading;
 
 namespace KellyElton.ModuleHost.WindowsService
 {
     static class Program
     {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
+        private static volatile bool KeepRunning = true;
+
         static void Main() {
-            ServiceBase[] ServicesToRun;
-            ServicesToRun = new ServiceBase[]
-            {
+            ServiceBase[] ServicesToRun = new ServiceBase[] {
                 new ModuleHostService()
             };
-            ServiceBase.Run( ServicesToRun );
+
+            if( Debugger.IsAttached ) {
+                foreach(IStartable sb in ServicesToRun ) {
+                    sb.Start();
+                }
+                while( KeepRunning ) {
+                    if( Console.KeyAvailable ) {
+                        KeepRunning = false;
+                        break;
+                    }
+                    Thread.Sleep( 10 );
+                };
+                foreach(IStartable sb in ServicesToRun ) {
+                    sb.Stop();
+                }
+            } else {
+                ServiceBase.Run( ServicesToRun );
+            }
         }
     }
 }

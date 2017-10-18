@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{EA36159E-C4C9-443F-8AF1-A7AC92EE61D7}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>KellyElton.ModuleHost.WindowsService</RootNamespace>
     <AssemblyName>KellyElton.ModuleHost.WindowsService</AssemblyName>
@@ -32,8 +32,14 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>KellyElton.ModuleHost.WindowsService.Program</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Annotations">
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETPortable\v4.5\Profile\Profile7\System.ComponentModel.Annotations.dll</HintPath>
+    </Reference>
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
     <Reference Include="System.Management" />
@@ -47,11 +53,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\PeriodicFolderWiper.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\PeriodicFolderWiper.Designer.cs">
+      <DependentUpon>PeriodicFolderWiper.cs</DependentUpon>
+    </Compile>
     <Compile Include="Components\EventLogLogger.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Components\EventLogLogger.Designer.cs">
       <DependentUpon>EventLogLogger.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Timer.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Components\Timer.Designer.cs">
+      <DependentUpon>Timer.cs</DependentUpon>
     </Compile>
     <Compile Include="ILoadable.cs" />
     <Compile Include="ProjectInstaller.cs">
@@ -73,6 +91,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Components\PeriodicFolderWiper.resx">
+      <DependentUpon>PeriodicFolderWiper.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Components\EventLogLogger.resx">
       <DependentUpon>EventLogLogger.cs</DependentUpon>
     </EmbeddedResource>
